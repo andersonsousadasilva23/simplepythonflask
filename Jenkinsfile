@@ -2,24 +2,28 @@ pipeline {
 
     agent {
         kubernetes {
-            label 'jenkins-agent'
-            defaultContainer 'docker'
             yaml """
 apiVersion: v1
 kind: Pod
 spec:
   containers:
+
   - name: docker
-    image: docker:dind
+    image: docker:24.0
     command:
     - cat
     tty: true
+    env:
+    - name: DOCKER_HOST
+      value: tcp://localhost:2375
+
+  - name: dind
+    image: docker:24.0-dind
     securityContext:
       privileged: true
-  volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
+    env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
 """
         }
     }
@@ -38,30 +42,27 @@ spec:
 
         stage('Build') {
             steps {
-                sh "docker build -t simple-python-flask:${IMAGE_TAG} ."
+                container('docker') {
+                    sh 'docker info'
+                    sh "docker build -t simple-python-flask:${IMAGE_TAG} ."
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh "docker run -tdi --name simple-python-flask-${IMAGE_TAG} --rm simple-python-flask:${IMAGE_TAG}"
-                sh "docker exec simple-python-flask-${IMAGE_TAG} nosetests --with-xunit --with-coverage --cover-package=project test_users.py"
+                container('docker') {
+                    sh "docker run -td --name simple-python-flask-${IMAGE_TAG} simple-python-flask:${IMAGE_TAG}"
+                }
             }
         }
     }
 
     post {
-
-        success {
-            echo "Pipeline executada com sucesso"
-        }
-
-        failure {
-            echo "Pipeline Falhou"
-        }
-
         cleanup {
-            sh "docker stop simple-python-flask-${IMAGE_TAG} || true"
+            container('docker') {
+                sh "docker stop simple-python-flask-${IMAGE_TAG} || true"
+            }
         }
     }
 }
