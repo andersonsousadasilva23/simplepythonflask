@@ -17,7 +17,6 @@ podTemplate(containers: [
         }
     }
 
-    stages{
         stage('Build') {
             steps{
                 sh "docker build -t simple-python-flask:${IMAGE_TAG} ."
@@ -29,7 +28,7 @@ podTemplate(containers: [
                  sh "docker exec simple-python-flask-${IMAGE_TAG} nosetests --with-xunit --with-coverage --cover-package=project test_users.py"
 	     }
          }
-    }
+    
     post {
         success {
             echo "Pipeline executada com sucesso"
