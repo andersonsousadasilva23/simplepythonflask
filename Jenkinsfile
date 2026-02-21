@@ -1,57 +1,65 @@
-pipeline {
+podTemplate(
+    containers: [
 
-    agent {
-        kubernetes {
-            yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
+        containerTemplate(
+            name: 'maven',
+            image: 'maven:3.8.1-jdk-8',
+            command: 'sleep',
+            args: '99d'
+        ),
 
-  - name: docker
-    image: docker:24.0
-    command:
-    - cat
-    tty: true
-    env:
-    - name: DOCKER_HOST
-      value: tcp://localhost:2375
+        containerTemplate(
+            name: 'docker',
+            image: 'docker:dind',
+            command: 'sleep',
+            args: '99d',
+            ttyEnabled: true,
+            privileged: true
+        )
+    ],
 
-  - name: dind
-    image: docker:24.0-dind
-    securityContext:
-      privileged: true
-    env:
-    - name: DOCKER_TLS_CERTDIR
-      value: ""
-    args:
-    - --host=tcp://0.0.0.0:2375
-    - --host=unix:///var/run/docker.sock
-"""
-        }
-    }
+    volumes: [
+        hostPathVolume(
+            hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'
+        )
+    ]
+) {
 
-    environment {
-        IMAGE_TAG = "0.${BUILD_NUMBER}"
-    }
+    node(POD_LABEL) {
 
-    stages {
+        container('docker') {
 
-        stage('Checkout') {
-            steps {
-                git 'http://192.168.88.20:3000/anderson/simplePythonFlask.git'
+            stage('Clona Git') {
+                git 'http://192.168.88.20:3000/odilon/simplePythonFlask.git'
+            }
+
+            stage('Build') {
+                sh "docker build -t simple-python-flask:${BUILD_ID} ."
+            }
+
+            stage('Teste') {
+
+                sh """
+                docker run -td --name simple-python-flask-${BUILD_ID} --rm simple-python-flask:${BUILD_ID}  """
+
+                sh """
+                docker exec simple-python-flask-${BUILD_ID} nosetests --with-xunit --with-coverage --cover-package=project test_users.py """
             }
         }
+    }
+}
 
-        stage('Build') {
-            steps {
-                container('docker') {
-                    sh 'sleep 10'   // ⬅ importante para dar tempo do daemon subir
-                    sh 'docker info'
-                    sh "docker build -t simple-python-flask:${IMAGE_TAG} ."
-                }
-            }
-        }
+post {
+    success {
+        echo "Pipeline executada com sucesso"
+    }
+
+    failure {
+        echo "Pipeline falhou"
+    }
+
+    cleanup {
+        sh "docker stop simple-python-flask-${BUILD_ID} || true"
     }
 }
 
