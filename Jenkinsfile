@@ -10,7 +10,7 @@ podTemplate(
 
         containerTemplate(
             name: 'docker',
-            image: 'docker:dind',
+            image: 'docker:20.10.24',
             command: 'sleep',
             args: '99d',
             ttyEnabled: true,
