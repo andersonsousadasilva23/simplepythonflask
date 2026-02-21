@@ -20,17 +20,14 @@ podTemplate(
 
     volumes: [
         hostPathVolume(
-            hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'
-        )
+            hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
     ]
 ) {
 
     node(POD_LABEL) {
-
         container('docker') {
-
             stage('Clona Git') {
-                git 'http://192.168.88.20:3000/odilon/simplePythonFlask.git'
+                git 'http://192.168.88.20:3000/anderson/simplePythonFlask.git'
             }
 
             stage('Build') {
@@ -38,12 +35,8 @@ podTemplate(
             }
 
             stage('Teste') {
-
-                sh """
-                docker run -td --name simple-python-flask-${BUILD_ID} --rm simple-python-flask:${BUILD_ID}  """
-
-                sh """
-                docker exec simple-python-flask-${BUILD_ID} nosetests --with-xunit --with-coverage --cover-package=project test_users.py """
+                sh """ docker run -td --name simple-python-flask-${BUILD_ID} --rm simple-python-flask:${BUILD_ID}  """
+                sh """ docker exec simple-python-flask-${BUILD_ID} nosetests --with-xunit --with-coverage --cover-package=project test_users.py """
             }
         }
     }
