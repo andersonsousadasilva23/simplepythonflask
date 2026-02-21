@@ -1,8 +1,27 @@
-pipeline {
-    agent any
+podTemplate(containers: [
+    containerTemplate(name: 'maven', image: 'maven:3.8.1-jdk-8', command: 'sleep', args: '99d'),
+    containerTempplate(
+        name: 'docker',
+        image: 'docker:dind',
+        command: 'sleep',
+        args: '99d',
+        ttyEnabled: true,
+        prviliged: true
+    )],
+  volumes: [ hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
+){
+
     environment {
         IMAGE_TAG="0.${BUILD_ID}"
     }
+    
+    node(POD_LABEL)
+    {
+        container('docker'){
+            git 'http://192.168.88.20:3000/anderson/simplePythonFlask.git'
+        }
+    }
+
     stages{
         stage('Build') {
             steps{
