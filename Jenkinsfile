@@ -1,13 +1,6 @@
 podTemplate(containers: [
     containerTemplate(name: 'maven', image: 'maven:3.8.1-jdk-8', command: 'sleep', args: '99d'),
-    containerTemplate(
-        name: 'docker',
-        image: 'docker:dind',
-        command: 'sleep',
-        args: '99d',
-        ttyEnabled: true,
-        prviliged: true
-    )],
+    containerTemplate(name: 'docker', image: 'docker:dind', command: 'sleep', args: '99d', ttyEnabled: true, prviliged: true)],
   volumes: [ hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
 ){
 
@@ -28,7 +21,7 @@ podTemplate(containers: [
                 sh "docker build -t simple-python-flask:${IMAGE_TAG} ."
             }
          }
-         stage ("Teste") {
+         stage ('Teste') {
              steps{
                  sh "docker run -tdi --name simple-python-flask-${IMAGE_TAG} --rm simple-python-flask:${IMAGE_TAG}"
                  sh "docker exec simple-python-flask-${IMAGE_TAG} nosetests --with-xunit --with-coverage --cover-package=project test_users.py"
