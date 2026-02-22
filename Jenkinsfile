@@ -41,15 +41,3 @@ volumes: [
     }
 }
 
-post {
-    success {
-        echo "Pipeline executada com sucesso, OK"
-    }
-    failure {
-        echo "Pipeline Falhou !!"
-    }
-    cleanup {
-        sh "docker stop simple-python-flask-${BUILD_ID}"
-    }
-}
-
