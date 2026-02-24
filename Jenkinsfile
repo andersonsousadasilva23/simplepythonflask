@@ -43,7 +43,7 @@ volumes: [
             script {
               def sonarScannerPath = tool 'SonarScanner'
                 withSonarQubeEnv('SonarQube'){
-                  sh "${sonarScannerPath}/bin/sonar-scanner -Dsonar.projectKey=courseCatalog -Dsonar.sources=."
+                  sh "${sonarScannerPath}/bin/sonar-scanner -Dsonar.projectKey=courseCatalog -Dsonar.javascript.node.maxspace=4096 -Dsonar.sources=."
 		}
               }
 	    }
