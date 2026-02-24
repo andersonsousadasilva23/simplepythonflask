@@ -41,7 +41,7 @@ volumes: [
         container('openjdk'){
            stage('SonarQube Analysis'){
             script{
-              def sonarScannerPath = toot 'SonarScanner'
+              def sonarScannerPath = tool 'SonarScanner'
                 withSonarQubeEnv('SonarQube'){
                   sh "${sonarScannerPath}/bin/sonar-scanner -Dsonar.projectKey=courseCatalog -Dsonar.sources."
 		}
