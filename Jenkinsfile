@@ -14,7 +14,7 @@ podTemplate(containers: [
         args: '99d',
         ttyEnabled: true,
         privileged: true
-    )
+    ),
     containerTemplate(name: 'openjdk', image: 'openjdk:11', command: 'sleep', args: '99d')],
 volumes: [
     hostPathVolume(
@@ -40,10 +40,10 @@ volumes: [
             }
         container('openjdk'){
            stage('SonarQube Analysis'){
-            script{
+            script {
               def sonarScannerPath = tool 'SonarScanner'
                 withSonarQubeEnv('SonarQube'){
-                  sh "${sonarScannerPath}/bin/sonar-scanner -Dsonar.projectKey=courseCatalog -Dsonar.sources."
+                  sh "${sonarScannerPath}/bin/sonar-scanner -Dsonar.projectKey=courseCatalog -Dsonar.sources=."
 		}
               }
 	    }
