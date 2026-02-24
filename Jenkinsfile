@@ -15,8 +15,7 @@ podTemplate(containers: [
         ttyEnabled: true,
         privileged: true
     )
-
-],
+    containerTemplate(name: 'openjdk', image: 'openjdk:11', command: 'sleep', args: '99d')],
 volumes: [
     hostPathVolume(
         hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'
@@ -39,6 +38,16 @@ volumes: [
                 sh "docker stop simple-python-flask-${BUILD_ID}"
                 sh "docker tag simple-python-flask:${BUILD_ID} 192.168.88.20:8082/simple-python-flask:${BUILD_ID}"
             }
+        container('openjdk'){
+           stage('SonarQube Analysis'){
+            script{
+              def sonarScannerPath = tool 'SonarScanner'
+                withSonarQubeEnv('SonarQube'){
+                  sh "${sonarScannerPath}/bin/sonar-scanner -Dsonar.projectKey=courseCatalog -Dsonar.sources."
+		}
+              }
+	    }
+        }
            stage("Push Image"){
                 script {
                     docker.withRegistry('http://192.168.88.20:8082', 'jenkins_docker'){
