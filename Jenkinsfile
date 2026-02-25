@@ -1,14 +1,13 @@
 podTemplate(
   containers: [
     containerTemplate(name: 'maven', image: 'maven:3.8.1-jdk-8', command: 'sleep', args: '99d'),
-    containerTemplate(
-      name: 'docker',
-      image: 'docker:dind',
-      command: 'sleep',
-      args: '99d',
-      ttyEnabled: true,
-      privileged: true
-    ),
+   containerTemplate(
+  name: 'docker',
+  image: 'docker:24.0.7-cli',
+  command: 'sleep',
+  args: '99d',
+  ttyEnabled: true
+ ),
     containerTemplate(name: 'kubectl', image: 'alpine', command: 'sleep', args: '99d'),
     containerTemplate(name: 'openjdk', image: 'eclipse-temurin:17-jdk', command: 'sleep', args: '99d')
   ],
