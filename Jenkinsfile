@@ -50,7 +50,7 @@ podTemplate(
 
         withSonarQubeEnv('SonarQube') {
 
-          withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+          withCredentials([string(credentialsId: 'd3c0b5db-aa6b-435e-86c5-451c4d7d0ce3', variable: 'SONAR_TOKEN')]) {
 
             sh """
               sonar-scanner \
