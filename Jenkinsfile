@@ -1,20 +1,27 @@
 podTemplate(
   containers: [
-    containerTemplate(name: 'maven', image: 'maven:3.8.1-jdk-8', command: 'sleep', args: '99d'),
-   containerTemplate(
-  name: 'docker',
-  image: 'docker:24.0.7-cli',
-  command: 'sleep',
-  args: '99d',
-  ttyEnabled: true
- ),
-    containerTemplate(name: 'kubectl', image: 'alpine', command: 'sleep', args: '99d'),
-    containerTemplate(name: 'openjdk', image: 'eclipse-temurin:17-jdk', command: 'sleep', args: '99d')
+
+    containerTemplate(
+      name: 'docker',
+      image: 'docker:24.0.7-cli',
+      command: 'sleep',
+      args: '99d',
+      ttyEnabled: true
+    ),
+
+    containerTemplate(
+      name: 'sonar',
+      image: 'sonarsource/sonar-scanner-cli:latest',
+      command: 'sleep',
+      args: '99d'
+    )
+
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
   ]
 ) {
+
   node(POD_LABEL) {
 
     container('docker') {
@@ -37,12 +44,21 @@ podTemplate(
       sh "docker tag simple-python-flask:${BUILD_ID} 192.168.88.20:8082/simple-python-flask:${BUILD_ID}"
     }
 
-    container('openjdk') {
+    container('sonar') {
+
       stage('SonarQube Analysis') {
-        script {
-          def sonarScannerPath = tool 'SonarScanner'
-          withSonarQubeEnv('SonarQube') {
-            sh """${sonarScannerPath}/bin/sonar-scanner -Dsonar.projectKey=courseCatalog -Dsonar.sources=. -Dsonar.javascript.exclusions=**"""
+
+        withSonarQubeEnv('SonarQube') {
+
+          withCredentials([string(credentialsId: 'd3c0b5db-aa6b-435e-86c5-451c4d7d0ce3', variable: 'SONAR_TOKEN')]) {
+
+            sh """
+              sonar-scanner \
+              -Dsonar.projectKey=courseCatalog \
+              -Dsonar.sources=. \
+              -Dsonar.login=$SONAR_TOKEN
+            """
+
           }
         }
       }
