@@ -21,7 +21,7 @@ podTemplate(
     container('docker') {
 
       stage("Clona Git") {
-        git 'http://192.168.88.20:3000/odilon/simplePythonFlask.git'
+        git 'http://192.168.88.20:3000/anderson/simplePythonFlask.git'
       }
 
       stage("Build") {
