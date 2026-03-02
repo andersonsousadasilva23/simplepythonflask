@@ -21,7 +21,6 @@ podTemplate(
     command: 'sleep',
     args: '99d',
     )
-
   ],
   volumes: [
     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
