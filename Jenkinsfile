@@ -70,7 +70,7 @@ podTemplate(
         }
       }
 
-     conteiner('kubectl'){
+     container('kubectl'){
         stage('deploy image'){
         withkubeConfig([credentialsID: 'k3s-serviceaccount',
                         serverUrl: 'http://192.168.88.30:6443',
