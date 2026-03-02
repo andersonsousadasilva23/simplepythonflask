@@ -75,8 +75,8 @@ podTemplate(
         withKubeConfig([credentialsID: 'k3s-serviceaccount',
                         serverUrl: 'http://192.168.88.30:6443',
        ]){
-       sh 'apt update && apk add --no-cache curl'
-       sh '   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+       sh 'apk update && apk add --no-cache curl'
+       sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
        sh 'chmod +x ./kubectl && mv ./kubectl /us/local/bin/kubectl'
        sh 'sleep 5'
        sh 'kubectl set image deployment/web simplepythonflask=192.168.88.20:8082/simple-python-flask:${BUILD_ID} -n homolog'
