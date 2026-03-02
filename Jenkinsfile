@@ -14,13 +14,13 @@ podTemplate(
       image: 'sonarsource/sonar-scanner-cli:latest',
       command: 'sleep',
       args: '99d'
-    )
+    ),
     containerTemplate(
     name: 'kubectl',
     image: 'alpine',
     command: 'sleep',
     args: '99d',
-    ),
+    )
 
   ],
   volumes: [
