@@ -16,12 +16,12 @@ teste-app:
     - apt update && apt install -y python3-mysqldb libmariadb-dev gcc build-essential pkg-config default-libmysqlclient-dev python3-dev
     - pip install -r requirements.txt
     - nosetests --with-xunit --with-coverage --cover-package=project test_users.py
-artifacts:
-  when: always
-  path: 
-    -nosetests.yml
-  reports:
-    junit: nosetests.xml
+  artifacts:
+    when: always
+    path: 
+      -nosetests.yml
+    reports:
+      junit: nosetests.xml
 
   build:
     stage: build
