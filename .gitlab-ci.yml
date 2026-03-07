@@ -4,7 +4,7 @@ services:
 
 stages:
   - test
-  - bulid
+  - buiid
   - deploy
 
 teste-app:
