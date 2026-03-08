@@ -44,7 +44,7 @@ deploy-homolog:
     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
     - mkdir $HOME/.kube
-    - echo -n $(kubeconfig) | base64 -d > $HOME/.kube/config
+    - echo -n "$kubeconfig" | base64 -d > $HOME/.kube/config
     - kubectl set image deployment/web simplepythonflask=${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} -n homolog
     - kubectl get pods -n homolog
     
