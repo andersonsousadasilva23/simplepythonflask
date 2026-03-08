@@ -45,7 +45,10 @@ deploy-homolog:
     - chmod +x ./kubectl && mv ./kubectl /usr/local/bin/kubectl
     - mkdir $HOME/.kube
     - echo -n "$kubeconfig" | base64 -d > $HOME/.kube/config
-    - kubectl get pods -A
+    - echo "---- kubeconfig file ----"
+    - cat $HOME/.kube/config
+    - echo "---- kubectl config ----"
+    - kubectl config view
     - kubectl set image deployment/web simplepythonflask=${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} -n homolog
     - kubectl get pods -n homolog
     
