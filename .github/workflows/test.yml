@@ -20,8 +20,8 @@ jobs:
       fail-fast: false
       matrix: 
         container:
-          - "docker.io/python:3.11.9-bullseye"
-          - "docker.io/python:3.10.14-bullseye"
+          - "docker.io/python:3.8-bullseye"
+          - "docker.io/python:3.9-bullseye"
     container:
       image: ${{ matrix.container }}
     steps:
