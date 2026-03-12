@@ -26,7 +26,7 @@ jobs:
     container:
       image: ${{ matrix .contatiner }}
     steps:
-      - users: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: "Apt get"
         run: apt update && apt install -y python3-mysqldb libmariadb-dev gcc build-essential pkg-config default-libmysqlclient-dev python3-dev
       - name: "Install pip depends"
