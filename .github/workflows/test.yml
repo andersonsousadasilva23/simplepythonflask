@@ -14,17 +14,17 @@ jobs:
     permissions:
       contents: read
       issues: read
-      check: write
+      checks: write
       pull-requests: write
     strategy:
-      fail-test: false
+      fail-fast: false
       matrix: 
         container:
           - "docker.io/python:3.12.1-bullseye"
           - "docker.io/python:3.11.9-bullseye"
           - "docker.io/python:3.10.14-bullseye"
     container:
-      image: ${{ matrix .contatiner }}
+      image: ${{ matrix.contatiner }}
     steps:
       - uses: actions/checkout@v4
       - name: "Apt get"
@@ -35,7 +35,7 @@ jobs:
         run: nosetests --with-xunit --with-coverage --cover-package=project test_users.py
       - name: Publish Teste Results
         uses: EnricoMI/publish-unit-test-result-action@v2
-        if : always()
+        if: always()
         with:
           files: |
             *.xml
