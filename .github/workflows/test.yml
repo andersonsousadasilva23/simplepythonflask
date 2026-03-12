@@ -24,7 +24,7 @@ jobs:
           - "docker.io/python:3.11.9-bullseye"
           - "docker.io/python:3.10.14-bullseye"
     container:
-      image: ${{ matreix .contatiner }}
+      image: ${{ matrix .contatiner }}
     steps:
       - users: actions/checkout@v4
       - name: "Apt get"
