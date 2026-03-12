@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: reade
+      issues: read
       check: write
       pull-requests: write
     strantegy:
