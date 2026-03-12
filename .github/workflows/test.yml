@@ -19,6 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: 
+      options: --user root
         container:
           - "docker.io/python:3.12.1-bullseye"
           - "docker.io/python:3.11.9-bullseye"
