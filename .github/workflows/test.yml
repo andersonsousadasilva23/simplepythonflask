@@ -16,7 +16,7 @@ jobs:
       issues: read
       check: write
       pull-requests: write
-    strantegy:
+    strategy:
       fail-test: false
       matrix: 
         container:
