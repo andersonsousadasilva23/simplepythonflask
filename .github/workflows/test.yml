@@ -13,27 +13,29 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: reade
-      check: write
+      issues: read
+      checks: write
       pull-requests: write
-    strantegy:
-      fail-test: false
+    strategy:
+      fail-fast: false
       matrix: 
         container:
           - "docker.io/python:3.12.1-bullseye"
           - "docker.io/python:3.11.9-bullseye"
           - "docker.io/python:3.10.14-bullseye"
     container:
-      image: ${{ matreix .contatiner }}
+      image: ${{ matrix.contatiner }}
     steps:
-      - users: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: "Apt get"
         run: apt update && apt install -y python3-mysqldb libmariadb-dev gcc build-essential pkg-config default-libmysqlclient-dev python3-dev
       - name: "Install pip depends"
         run: pip install -r requirements.txt  
       - name: " Run Test"
         run: nosetests --with-xunit --with-coverage --cover-package=project test_users.py
-        if : always()
+      - name: Publish Teste Results
+        uses: EnricoMI/publish-unit-test-result-action@v2
+        if: always()
         with:
           files: |
             *.xml
