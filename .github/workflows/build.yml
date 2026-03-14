@@ -1,0 +1,44 @@
+---
+name: Container Imagem Build
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 1 * * *'
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Login REGISTRY
+        uses: docker/login-actions@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{github.actor }}
+          password: ${{ secrets.github_token }}
+      - name: Extrair Metadados
+        id: metadado
+        uses: docker/metadata-actions@v5
+        with:
+          image: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME}}
+      - name: Build e Push
+        uses: docker/build-push-actions@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.metadado.outputs.tags }}
+          labels: ${{ steps.metadado.outputs.labels }}
