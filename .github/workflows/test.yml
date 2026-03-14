@@ -37,3 +37,15 @@ jobs:
         with:
           files: |
             *.xml
+  build-container:
+    runs-on: ubtuntu-latest
+    steps:
+    - uses: action/checkout@v4
+    - name: "Build Container"
+      run: docker build . --file Dockerfile --tag $IAMGE_NAME:${GITHUB_SHA}  
+
+
+
+
+
+
