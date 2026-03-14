@@ -33,7 +33,7 @@ jobs:
         id: metadado
         uses: docker/metadata-actions@v5
         with:
-          image: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME}}
+          images: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME}}
       - name: Build e Push
         uses: docker/build-push-actions@v5
         with:
