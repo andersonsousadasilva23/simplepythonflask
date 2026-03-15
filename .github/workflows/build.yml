@@ -28,7 +28,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{github.actor }}
-          password: ${{ secrets.github_token }}
+          password: ${{ secrets.TOKEN }}
       - name: Extrair Metadados
         id: metadado
         uses: docker/metadata-action@v5
