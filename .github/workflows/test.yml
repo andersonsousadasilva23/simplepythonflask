@@ -1,4 +1,4 @@
-name: "CIDE - Test"
+name: "CICD - Test"
 
 on:
   pull_request:
