@@ -34,9 +34,12 @@ spec:
             - -c
             - |
               echo "Waiting for database..."
-              sleep 10
+              until nc -z mariadb 3306; do
+              echo "Database not ready..."
+              sleep 3
+              done
+              echo "Database ready!"
               python3 create_db.py
-
 
           name: simple-python-flask-init-db
           resources: {}
